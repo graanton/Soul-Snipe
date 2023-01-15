@@ -7,7 +7,7 @@ public class Corridor : MonoBehaviour
 {
     [SerializeField] private Tilemap _tilemap;
     [SerializeField] private Pool<TileBase> _floorTilesPool;
-    [SerializeField] private TileBase _fenseTile;
+    [SerializeField] private Pool<TileBase> _fenseTile;
 
     private void Start()
     {
@@ -41,7 +41,7 @@ public class Corridor : MonoBehaviour
         Vector2Int currentPosition = startPosition;
         for (int i = 0; i < length; i++)
         {
-            _tilemap.SetTile((Vector3Int)currentPosition, _fenseTile);
+            _tilemap.SetTile((Vector3Int)currentPosition, _fenseTile.GetRandomWeightedObject().obj);
             currentPosition += direction;
         }
     }

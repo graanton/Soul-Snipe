@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class DungeonGenerator : MonoBehaviour
@@ -6,8 +7,10 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] private Vector2 _spacing;
     [SerializeField] private int _pathLength;
     [SerializeField] private int _pathCount;
- 
-    public List<Room> pool;
+    [SerializeField] private Transform _parent;
+    [SerializeField] private Pool<Room> _pool;
+
+    public List<Room> rooms = new();
 
     private readonly List<Vector2Int> _walkDirections = new() { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
 
@@ -19,6 +22,11 @@ public class DungeonGenerator : MonoBehaviour
     public void Generate()
     {
         List<Vector2Int> points = new(DungeonPointsAlgorithm(_pathCount, _pathLength));
+
+        foreach (Vector2Int point in points)
+        {
+            AddRoom(_pool.GetRandomWeightedObject().obj, point);
+        }
     }
 
     private HashSet<Vector2Int> DungeonPointsAlgorithm(int pathCount, int pathLength)
@@ -51,8 +59,8 @@ public class DungeonGenerator : MonoBehaviour
         return points;
     }
 
-    public void AddRoom(Room room)
+    public void AddRoom(Room room, Vector2Int position)
     {
-
+        Instantiate(room, new Vector3(position.x, position.y) + _parent.position, Quaternion.identity, _parent);
     }
 }
